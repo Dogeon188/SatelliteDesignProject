@@ -17,12 +17,13 @@ public:
         return aprsSerial.available();
     }
     String receive();
-    inline String run(String &command) {
-        aprsSerial.print(command + "\r\n");
-        return receive();
-    }
-    inline String send(String &command) {
-        return run("AT+SENSOR=" + command);
+    bool run(const String &command, bool exceptResponse = true);
+    inline String send(const String &command) {
+        if (this->run(command)) {
+            String response = this->receive();
+            return response;
+        }
+        return "";
     }
 };
 
